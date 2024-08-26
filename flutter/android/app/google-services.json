@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "710727386203",
+    "project_id": "done-today-f06b9",
+    "storage_bucket": "done-today-f06b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710727386203:android:69100410dcf3192012eb7e",
+        "android_client_info": {
+          "package_name": "com.example.done_today"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710727386203-i713qsurtbr6tei0gcamd26lqrvupa5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADg_AXu7FpVWAUUhFS_8eFaS9QirOFqFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710727386203-i713qsurtbr6tei0gcamd26lqrvupa5g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "710727386203-9urp82dalvrecmvrcprl2al0vbf6e8hh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rob.done-today-native"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
