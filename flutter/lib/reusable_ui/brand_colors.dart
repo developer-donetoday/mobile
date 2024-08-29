@@ -9,6 +9,6 @@ class BrandColors {
 
   BrandColors._internal();
 
-  Color primary = Colors.greenAccent.shade400;
+  Color primary = Colors.green;
   Color secondary = Colors.blueAccent.shade400;
 }

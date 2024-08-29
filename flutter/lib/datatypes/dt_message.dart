@@ -29,13 +29,4 @@ class Message {
   bool get read {
     return data["read"] ?? false;
   }
-
-  Future<void> markRead() async {
-    if (!isAuthor && !data["read"]) {
-      await FirebaseFirestore.instance
-          .collection("messages")
-          .doc(id)
-          .update({"read": true});
-    }
-  }
 }

@@ -11,7 +11,7 @@ class ActionViews {
 
   ActionViews._internal();
 
-  void showPopupDrawer(BuildContext context) {
+  void showPopupDrawer(BuildContext context, Widget view) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -21,7 +21,7 @@ class ActionViews {
         minHeight: MediaQuery.of(context).size.height * 0.5,
       ),
       builder: (BuildContext context) {
-        return NewPostBottomSheet();
+        return view;
       },
     );
   }

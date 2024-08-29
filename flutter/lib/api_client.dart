@@ -19,6 +19,12 @@ class ApiClient {
     return FirebaseAuth.instance.currentUser!.uid;
   }
 
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
   Future<bool> loginWithEmailPassword(AuthData authData) async {
     try {
       await Firebase.initializeApp();
@@ -70,23 +76,17 @@ class ApiClient {
   }
 
   Future<FeedData> getTasks() async {
-    try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('tasks').get();
-      var allTasks = snapshot.docs.map((e) => Task.fromFirestore(e)).toList();
-      List<Task> myTasks = [];
-      List<Task> myFeed = [];
-      for (var task in allTasks) {
-        if (task.author == FirebaseAuth.instance.currentUser!.uid) {
-          myTasks.add(task);
-        } else {
-          myFeed.add(task);
-        }
+    final snapshot = await FirebaseFirestore.instance.collection('tasks').get();
+    var allTasks = snapshot.docs.map((e) => Task.fromFirestore(e)).toList();
+    List<Task> myTasks = [];
+    List<Task> myFeed = [];
+    for (var task in allTasks) {
+      if (task.author == FirebaseAuth.instance.currentUser!.uid) {
+        myTasks.add(task);
+      } else {
+        myFeed.add(task);
       }
-      return FeedData(myTasks: myTasks, myFeed: myFeed);
-    } catch (e) {
-      print('Failed to get tasks: $e');
-      return FeedData(myTasks: [], myFeed: []);
     }
+    return FeedData(myTasks: myTasks, myFeed: myFeed);
   }
 }

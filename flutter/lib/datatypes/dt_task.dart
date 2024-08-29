@@ -98,4 +98,13 @@ class Task {
       "read": false
     });
   }
+
+  Future<void> markMessageRead(Message message) async {
+    if (!message.isAuthor && !message.data["read"]) {
+      await reference
+          .collection("messages")
+          .doc(message.id)
+          .update({"read": true});
+    }
+  }
 }

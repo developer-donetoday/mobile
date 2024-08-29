@@ -4,10 +4,12 @@ import 'dart:ffi';
 import 'package:done_today/api_client.dart';
 import 'package:done_today/datatypes/dt_task.dart';
 import 'package:done_today/datatypes/feed_data.dart';
+import 'package:done_today/onboarding_screen.dart';
 import 'package:done_today/reusable_ui/action_views.dart';
 import 'package:done_today/reusable_ui/brand_colors.dart';
 import 'package:done_today/reusable_ui/circular_button.dart';
 import 'package:done_today/reusable_ui/feed_card.dart';
+import 'package:done_today/reusable_ui/new_post_bottom_sheet.dart';
 import 'package:done_today/reusable_ui/rectangle_button.dart';
 import 'package:done_today/task_progress_screen.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +58,26 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                               padding: EdgeInsets.only(top: 20.0, bottom: 0),
                               child: Column(
                                 children: [
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            ApiClient().logout();
+                                            Navigator.pushAndRemoveUntil<
+                                                dynamic>(
+                                              context,
+                                              MaterialPageRoute<dynamic>(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        OnboardingScreen(),
+                                              ),
+                                              (route) =>
+                                                  false, //if you want to disable back feature set to false
+                                            );
+                                          },
+                                          child: Text("Logout")),
+                                    ],
+                                  ),
                                   Icon(
                                     Icons.eco,
                                     size: 70,
@@ -114,8 +136,9 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                         Spacer(),
                                         TextButton(
                                             onPressed: () {
-                                              ActionViews()
-                                                  .showPopupDrawer(context);
+                                              ActionViews().showPopupDrawer(
+                                                  context,
+                                                  NewPostBottomSheet());
                                             },
                                             child: Text(
                                               "New",
@@ -188,8 +211,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                         Spacer(),
                                         TextButton(
                                             onPressed: () {
-                                              ActionViews()
-                                                  .showPopupDrawer(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        "Feature not yet implemented")),
+                                              );
                                             },
                                             child: Text(
                                               "Map",
@@ -224,8 +251,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           onTap: () {
-                                            ActionViews()
-                                                .showPopupDrawer(context);
+                                            // ActionViews()
+                                            //     .showPopupDrawer(context);
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
@@ -238,6 +265,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                         }),
                   );
                 } else {
+                  print("loading");
                   return Center(
                     child: CircularProgressIndicator(),
                   );
