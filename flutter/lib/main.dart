@@ -1,5 +1,5 @@
 import 'package:done_today/firebase_options.dart';
-import 'package:done_today/onboarding_screen.dart';
+import 'package:done_today/mvp/onboarding_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -20,10 +20,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Done Today',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Colors.greenAccent.shade700),
         useMaterial3: true,
       ),
-      home: const OnboardingScreen(),
+      home: OnboardingView(),
     );
   }
 }
