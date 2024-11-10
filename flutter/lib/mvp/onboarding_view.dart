@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:done_today/api_client.dart';
 import 'package:done_today/datatypes/profile.dart';
+import 'package:done_today/mvp/profile_continue_view.dart';
 import 'package:done_today/mvp/task_list_view.dart';
 import 'package:done_today/reusables/circular_button.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<OnboardingView> {
   TextEditingController _codeController = TextEditingController();
-  bool processOccuring = false;
+  bool processOccuring = true;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _OnboardingViewState extends State<OnboardingView> {
         setState(() {
           processOccuring = true;
         });
+        processOccuring = false;
         Timer(Duration(seconds: 1), () {
           showProfileContinueSheet(profile);
         });
@@ -129,89 +131,8 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 
   void showProfileContinueSheet(Profile profile) {
-    showModalBottomSheet(
-        isDismissible: false,
-        context: context,
-        builder: (builder) {
-          return Container(
-            padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 3,
-            child: Stack(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '👋',
-                    style: GoogleFonts.anton(
-                      fontSize: 36,
-                    ),
-                  ),
-                  Text(
-                    "Hi, ${profile.name}",
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 36,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Text(
-                      "Thanks for being a part of your community. Set up an authentication method to get your work done today.",
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    height: 100,
-                    child: Row(
-                      children: [
-                        CircularButton(
-                            label: "BACK",
-                            onTap: () {
-                              Navigator.pop(context);
-                              setState(() {
-                                processOccuring = false;
-                              });
-                            },
-                            backgroundColor: Colors.grey.shade600,
-                            foregroundColor: Colors.white),
-                        Spacer(),
-                        CircularButton(
-                            label: "CONTINUE",
-                            onTap: () {
-                              Navigator.pop(context);
-                              ApiClient().saveProfile(profile);
-                              Navigator.of(context)
-                                  .push(
-                                MaterialPageRoute(
-                                    builder: (context) => TaskListView()),
-                              )
-                                  .then((_) {
-                                setState(() {
-                                  processOccuring = false;
-                                });
-                              });
-                            },
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white)
-                      ],
-                    ),
-                  ))
-            ]),
-          );
-        });
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ProfileContinueView(profile: profile),
+    ));
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:done_today/api_client.dart';
 import 'package:done_today/datatypes/profile.dart';
 import 'package:done_today/datatypes/task.dart';
+import 'package:done_today/mvp/all_profiles_view.dart';
 import 'package:done_today/mvp/onboarding_view.dart';
 import 'package:done_today/mvp/task_messaging_view.dart';
 import 'package:done_today/reusables/circular_button.dart';
@@ -32,38 +33,31 @@ class _TaskListViewState extends State<TaskListView> {
         },
         child: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 0),
-              child: FutureBuilder(
-                  initialData: profile,
-                  future: ApiClient().getProfile(null),
-                  builder: (context, snapshot) {
+            FutureBuilder(
+                initialData: profile,
+                future: ApiClient().getProfile(null),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
                     if (snapshot.hasData) {
-                      if (snapshot.hasData) {
-                        profile = snapshot.data as Profile;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+                      profile = snapshot.data as Profile;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Text(
                               "Hello, ${profile!.name}",
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w600),
                             ),
-                            userTaskListView()
-                          ],
-                        );
-                      }
+                          ),
+                          userTaskListView(),
+                        ],
+                      );
                     }
-                    return Container();
-                  }),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            //   child: Divider(
-            //     height: 0,
-            //     thickness: 1,
-            //   ),
-            // ),
+                  }
+                  return Container();
+                }),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Container(
@@ -178,14 +172,20 @@ class _TaskListViewState extends State<TaskListView> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Your\nTasks (0)",
-                    style: GoogleFonts.montserrat(
-                        height: .9, fontWeight: FontWeight.w800, fontSize: 36),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 20),
+                    child: Text(
+                      "Your\nTasks (0)",
+                      style: GoogleFonts.montserrat(
+                          height: .9,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 36),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
+                  navigationControls(profile!)
                   // Padding(
                   //   padding: const EdgeInsets.only(top: 20.0),
                   //   child: Container(
@@ -206,81 +206,75 @@ class _TaskListViewState extends State<TaskListView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Your\nTasks (${tasks.length})",
-                  style: GoogleFonts.montserrat(
-                      height: .9, fontWeight: FontWeight.w800, fontSize: 36),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Text(
+                    "Your\nTasks (${tasks.length})",
+                    style: GoogleFonts.montserrat(
+                        height: .9, fontWeight: FontWeight.w800, fontSize: 36),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
+                navigationControls(profile!),
                 Column(
                   children: (tasks.map((e) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 15.0),
                       child: Container(
                           child: Column(children: [
-                        Container(
-                            clipBehavior: Clip.hardEdge,
-                            width: MediaQuery.of(context).size.width - 40,
-                            decoration: BoxDecoration(
-                              // color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          TaskMessagingView(e)));
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.all(15),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(e.task),
-                                            ]),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      FutureBuilder(
-                                        future: e.getMessageCount(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10, 5, 10, 5),
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.shade400,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Text(
-                                                snapshot.data.toString(),
-                                                style: GoogleFonts.montserrat(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Colors.white),
-                                              ),
-                                            );
-                                          }
-                                          return Container();
-                                        },
-                                      )
-                                    ],
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                              clipBehavior: Clip.hardEdge,
+                              width: MediaQuery.of(context).size.width - 40,
+                              decoration: BoxDecoration(
+                                // color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TaskMessagingView(e)));
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(e.task),
+                                                FutureBuilder(
+                                                    future: e.getAuthorWidget(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasData) {
+                                                        return snapshot.data
+                                                            as Widget;
+                                                      }
+                                                      return Container();
+                                                    })
+                                              ]),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )),
+                              )),
+                        ),
                       ])),
                     );
                   }).toList()),
@@ -288,7 +282,47 @@ class _TaskListViewState extends State<TaskListView> {
               ],
             );
           }
+          print("no data");
           return Container();
         });
+  }
+
+  Widget navigationControls(Profile profile) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              scrollDirection: Axis.horizontal,
+              children: [
+                CircularButton(
+                    label: "Past Tasks",
+                    onTap: () {},
+                    backgroundColor: Colors.grey.shade600,
+                    foregroundColor: Colors.white),
+                SizedBox(
+                  width: 10,
+                ),
+                profile.isAdmin
+                    ? CircularButton(
+                        label: "Manage Profiles",
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AllProfilesView()));
+                        },
+                        backgroundColor: Colors.grey.shade600,
+                        foregroundColor: Colors.white)
+                    : Container(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

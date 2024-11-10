@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:done_today/datatypes/task.dart';
 import 'package:done_today/mvp/full_screen_processing_view.dart';
+import 'package:done_today/mvp/message_compose_bar.dart';
 import 'package:done_today/mvp/task_list_view.dart';
 import 'package:done_today/mvp/utils.dart';
 import 'package:done_today/reusables/circular_button.dart';
@@ -158,7 +159,8 @@ class _TaskMessagingViewState extends State<TaskMessagingView> {
                                     future: message.getAuthorWidget(),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
-                                          ConnectionState.done) {
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
                                         return snapshot.data!;
                                       } else {
                                         return Container();
@@ -196,43 +198,10 @@ class _TaskMessagingViewState extends State<TaskMessagingView> {
               Divider(
                 height: 0,
               ),
-              Container(
-                decoration: BoxDecoration(color: Colors.grey.shade200),
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        onChanged: (value) {
-                          if (value.contains("\n")) {
-                            _messageController.text =
-                                value.replaceAll("\n", "");
-                            FocusScope.of(context).unfocus();
-                          }
-                        },
-                        style: GoogleFonts.roboto(fontSize: 16),
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Message',
-                        ),
-                      ),
-                    ),
-                    CircularButton(
-                        label: "SEND",
-                        onTap: () async {
-                          if (_messageController.text.isEmpty) return;
-                          await widget.task.addMessage(_messageController.text);
-                          setState(() {
-                            _messageController.clear();
-                          });
-                        },
-                        backgroundColor: Colors.greenAccent.shade700,
-                        foregroundColor: Colors.white)
-                  ],
-                ),
-              ),
+              MessageComposeBar(onMessageSend: (value) {
+                widget.task.addMessage(value);
+                setState(() {});
+              })
             ],
           ),
         ),

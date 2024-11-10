@@ -12,27 +12,34 @@ class Message {
 
   String get author => data['author'];
   String get message => data['message'];
-  Timestamp get created => data['created'];
+  Timestamp? get created => data['created'];
 
   Future<Widget> getAuthorWidget() async {
     var profile = await ApiClient().getProfile(data['author']);
-    return Row(
-      children: [
-        Text(
-          profile!.displayName(),
-          style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 14),
+    return Material(
+      child: InkWell(
+        onTap: () => {},
+        child: Row(
+          children: [
+            Text(
+              profile!.displayName(),
+              style:
+                  GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 14),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              DateTimeFormatter.formatWithTime(
+                  created != null ? created!.toDate() : DateTime.now()),
+              style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12,
+                  color: Colors.grey.shade600),
+            ),
+          ],
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Text(
-          DateTimeFormatter.formatWithTime(created.toDate()),
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w300,
-              fontSize: 12,
-              color: Colors.grey.shade600),
-        ),
-      ],
+      ),
     );
   }
 }

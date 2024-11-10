@@ -11,6 +11,6 @@ class DateTimeFormatter {
     if (hour == 0) {
       hour = 12;
     }
-    return "${dateTime.month}/${dateTime.day}/${dateTime.year} $hour:${dateTime.minute} ${dateTime.hour >= 12 ? 'PM' : 'AM'}";
+    return "${dateTime.month}/${dateTime.day}/${dateTime.year} $hour:${dateTime.minute.toString().padLeft(2, "0")} ${dateTime.hour >= 12 ? 'PM' : 'AM'}";
   }
 }
